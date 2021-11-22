@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   Tag.findAll({
     include: {
       model: Product,
-      attributes: ['id', 'product_name', 'price', 'stock']}
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']}
   })
     .then(dbTagData => res.json(dbTagData))
     .catch(err => {
@@ -56,9 +56,22 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update({
-
+  Tag.update(req.body, {
+    where: {
+      id: req.params.id
+    },
   })
+  .then(dbTagData => {
+    if (!dbTagData[0]) {
+      res.status(404).json({ message: 'No tag found with this id' })
+      return;
+    }
+    res.json(dbTagData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 router.delete('/:id', (req, res) => {
@@ -72,11 +85,11 @@ router.delete('/:id', (req, res) => {
       res.status(400).json({ message: 'No tag found with that id'});
       return;
     }
-    res.json(dbTagData)
+    res.json(dbTagData);
   })
   .catch(err => {
-    res.status(500).json(err);
-  })
+  res.status(500).json(err);
+  });
 });
 
 module.exports = router;
