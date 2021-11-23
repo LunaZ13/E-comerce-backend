@@ -43,7 +43,6 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  console.log('REQ.BODY!!!', req.body)
   // create a new tag
   Tag.create({
     tag_name: req.body.tag_name

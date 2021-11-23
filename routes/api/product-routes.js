@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
   .then(dbTagData => res.json(dbTagData))
     .catch(err => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -23,12 +23,23 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  Product.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [Category, {
+      model: Tag, through: ProductTag
+    }]
+  })
+  .then(dbProductData => res,json(dbProductData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 // create new product
 router.post('/', (req, res) => {
-  console.log('R U A DCIMAL!', req.body)
- 
   /* req.body should look like this...
     {
       product_name: "Basketball",
