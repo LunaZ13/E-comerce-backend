@@ -31,7 +31,7 @@ router.get('/:id', (req, res) => {
       model: Tag, through: ProductTag
     }]
   })
-  .then(dbProductData => res,json(dbProductData))
+  .then(dbProductData => res.json(dbProductData))
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
