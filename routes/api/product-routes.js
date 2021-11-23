@@ -7,6 +7,16 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+  Product.findAll({
+    include: [Category, {
+      model: Tag, through: ProductTag
+    }]
+  })
+  .then(dbTagData => res.json(dbTagData))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // get one product
@@ -17,6 +27,8 @@ router.get('/:id', (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
+  console.log('R U A DCIMAL!', req.body)
+ 
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -27,6 +39,7 @@ router.post('/', (req, res) => {
   */
   Product.create(req.body)
     .then((product) => {
+      console.log('INSIDE .then!! just made this product', product)
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {

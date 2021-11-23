@@ -26,7 +26,7 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
     include: {
-      // not sure exactly what to include
+      model: Product
     }
   })
   .then(dbTagData => {
@@ -43,9 +43,10 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+  console.log('REQ.BODY!!!', req.body)
   // create a new tag
   Tag.create({
-
+    tag_name: req.body.tag_name
   })
   .then(dbTagData => res.json(dbTagData))
   .catch(err => {
